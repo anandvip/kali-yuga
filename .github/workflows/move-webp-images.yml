@@ -1,0 +1,29 @@
+name: Move .webp Images to Folder
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  move-webp-images:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository content
+      uses: actions/checkout@v2
+
+    - name: Create images directory if it doesn't exist
+      run: mkdir -p images
+
+    - name: Move .webp images to images folder
+      run: |
+        find . -maxdepth 1 -type f -iname "*.webp" -exec mv {} images/ \;
+
+    - name: Commit changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git add images/
+        git commit -m 'Move .webp images to images folder'
+        git push
